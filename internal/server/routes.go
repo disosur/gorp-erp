@@ -8,16 +8,17 @@ import (
 	"fmt"
 	"time"
 
+	"gorp-erp/cmd/web"
+
 	"github.com/a-h/templ"
 	"github.com/coder/websocket"
-	"gorp-erp/cmd/web"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	mux := http.NewServeMux()
 
 	// Register routes
-	mux.HandleFunc("/", s.HelloWorldHandler)
+	mux.HandleFunc("/api", s.HelloWorldHandler)
 
 	mux.HandleFunc("/health", s.healthHandler)
 
@@ -25,7 +26,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	fileServer := http.FileServer(http.FS(web.Files))
 	mux.Handle("/assets/", fileServer)
-	mux.Handle("/web", templ.Handler(web.HelloForm()))
+	mux.Handle("/", templ.Handler(web.HelloForm()))
 	mux.HandleFunc("/hello", web.HelloWebHandler)
 
 	// Wrap the mux with CORS middleware
